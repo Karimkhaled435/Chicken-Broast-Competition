@@ -435,7 +435,7 @@
         // ===================== إرسال الإيميل (EmailJS) =====================
         function sendDataToEmail(score) {
             // استبدل "ضع_SERVICE_ID_هنا" بالـ Service ID الحقيقي الخاص بك
-            const serviceID = "ضع_SERVICE_ID_هنا"; 
+            const serviceID = "service_7zbs7hm"; 
             const templateID = "template_ayg67ja"; // الـ Template ID الذي أرسلته
 
             const templateParams = {
@@ -447,7 +447,7 @@
                 device_id: deviceID
             };
 
-            if(serviceID === "ضع_SERVICE_ID_هنا") {
+            if(serviceID === "service_7zbs7hm") {
                 console.warn("تنبيه: لم يتم وضع Service ID، لن يتم إرسال الإيميل.");
                 return;
             }
