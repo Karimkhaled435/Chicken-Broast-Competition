@@ -2,378 +2,498 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>مسابقة رمضان - تشيكن برويست</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* --- تنسيقات CSS --- */
+        /* ==================== نفس الستايل الخاص بك تماماً ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%); 
-            color: #fff; 
-            min-height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            overflow-x: hidden; 
-            user-select: none; /* منع تحديد النص */
-        }
+        html, body { height: 100%; width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 10px; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 89, 255, 0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        .logo-bar { position: fixed; top: 0; right: 0; left: 0; height: 80px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); border-bottom: 2px solid rgba(255, 0, 0, 0.3); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 10px; }
+        .logo-bar img { height: 60px; width: auto; object-fit: contain; }
+        .container { position: relative; z-index: 1; width: 100%; max-width: 750px; animation: slideIn 0.8s ease-out; margin-top: 100px; margin-bottom: 20px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .glass-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); border: 2px solid rgba(255, 0, 0, 0.3); border-radius: 20px; padding: 30px 20px; box-shadow: 0 25px 65px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; }
+        @media (min-width: 600px) { .glass-card { padding: 50px 40px; border-radius: 25px; } }
+        .glass-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, rgba(255, 0, 0, 0.3), rgba(0, 89, 255, 0.3), transparent); pointer-events: none; }
+        .header { text-align: center; margin-bottom: 30px; animation: fadeInDown 0.8s ease-out 0.2s both; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .title { color: #ffffff; font-size: 24px; font-weight: bold; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(255, 0, 0, 0.2); letter-spacing: 1px; }
+        @media (min-width: 600px) { .title { font-size: 32px; } }
+        .subtitle { color: rgba(255, 255, 255, 0.8); font-size: 14px; margin-bottom: 20px; letter-spacing: 0.5px; }
+        @media (min-width: 600px) { .subtitle { font-size: 16px; } }
+        .warning { background: rgba(255, 0, 0, 0.15); border-left: 4px solid #FF0000; border-radius: 8px; padding: 14px; font-size: 12px; color: rgba(255, 255, 255, 0.95); line-height: 1.6; margin-bottom: 25px; }
+        @media (min-width: 600px) { .warning { padding: 16px; font-size: 13px; margin-bottom: 30px; } }
+        .form-section { display: none; animation: fadeIn 0.5s ease-out; }
+        .form-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .name-input-wrapper { margin-bottom: 25px; }
+        .name-input-wrapper label { display: block; color: rgba(255, 255, 255, 0.95); font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+        @media (min-width: 600px) { .name-input-wrapper label { font-size: 16px; margin-bottom: 12px; } }
+        .name-input-wrapper input { width: 100%; padding: 12px 14px; border: 2px solid rgba(0, 89, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: white; font-size: 14px; transition: all 0.3s ease; }
+        @media (min-width: 600px) { .name-input-wrapper input { padding: 14px 16px; font-size: 16px; border-radius: 12px; } }
+        .name-input-wrapper input:focus { outline: none; border-color: rgba(0, 89, 255, 0.6); background: rgba(0, 89, 255, 0.08); box-shadow: 0 0 20px rgba(0, 89, 255, 0.2); }
+        .question-section { margin-bottom: 25px; animation: fadeInUp 0.5s ease-out; }
+        @media (min-width: 600px) { .question-section { margin-bottom: 30px; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .question-title { color: rgba(255, 255, 255, 0.95); font-size: 15px; font-weight: 600; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
+        @media (min-width: 600px) { .question-title { font-size: 18px; gap: 12px; margin-bottom: 20px; line-height: 1.5; } }
+        .question-number { background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); color: white; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3); }
+        @media (min-width: 600px) { .question-number { width: 32px; height: 32px; min-width: 32px; font-size: 14px; } }
+        .text-input-area { width: 100%; padding: 12px 14px; border: 2px solid rgba(0, 89, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: white; font-size: 14px; font-family: inherit; resize: vertical; min-height: 80px; transition: all 0.3s ease; line-height: 1.5; }
+        @media (min-width: 600px) { .text-input-area { padding: 14px 16px; font-size: 15px; border-radius: 12px; min-height: 100px; } }
+        .text-input-area:focus { outline: none; border-color: rgba(0, 89, 255, 0.6); background: rgba(0, 89, 255, 0.08); box-shadow: 0 0 20px rgba(0, 89, 255, 0.2); }
+        .buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 30px; flex-wrap: wrap; }
+        @media (min-width: 600px) { .buttons { gap: 12px; margin-top: 40px; } }
+        .btn { flex: 1; min-width: 100px; padding: 12px 16px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; position: relative; overflow: hidden; }
+        @media (min-width: 600px) { .btn { padding: 14px 20px; font-size: 16px; border-radius: 12px; letter-spacing: 1px; } }
+        .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
+        .btn:hover::before { left: 100%; }
+        .btn-prev { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.9); border: 2px solid rgba(255, 255, 255, 0.2); }
+        .btn-prev:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.4); }
+        .btn-next, .btn-submit, .btn-share { background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); color: white; border: none; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); }
+        .btn-next:hover, .btn-submit:hover, .btn-share:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4); }
+        .btn-next:active, .btn-submit:active, .btn-share:active { transform: translateY(0); }
+        .progress-bar { background: rgba(255, 255, 255, 0.08); height: 5px; border-radius: 10px; overflow: hidden; margin-bottom: 25px; border: 1px solid rgba(0, 89, 255, 0.2); }
+        @media (min-width: 600px) { .progress-bar { height: 6px; margin-bottom: 30px; } }
+        .progress-fill { background: linear-gradient(90deg, #FF0000 0%, #0059FF 100%); height: 100%; transition: width 0.3s ease; box-shadow: 0 0 20px rgba(0, 89, 255, 0.5); }
+        .results-section { display: none; text-align: center; animation: fadeIn 0.5s ease-out; }
+        .results-section.active { display: block; }
+        .score-box { background: rgba(0, 89, 255, 0.1); border: 2px solid rgba(0, 89, 255, 0.3); border-radius: 15px; padding: 30px 20px; margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0, 89, 255, 0.15); }
+        @media (min-width: 600px) { .score-box { padding: 40px 30px; margin-bottom: 30px; border-radius: 16px; } }
+        .score-display { font-size: 48px; font-weight: bold; background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+        @media (min-width: 600px) { .score-display { font-size: 72px; margin-bottom: 10px; } }
+        .score-label { color: rgba(255, 255, 255, 0.9); font-size: 15px; margin-bottom: 15px; }
+        @media (min-width: 600px) { .score-label { font-size: 18px; margin-bottom: 20px; } }
+        .conditions { background: rgba(255, 255, 255, 0.05); border: 2px dashed rgba(255, 0, 0, 0.2); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: right; }
+        @media (min-width: 600px) { .conditions { padding: 25px; margin-bottom: 30px; border-radius: 12px; } }
+        .conditions h3 { color: #0059FF; margin-bottom: 12px; font-size: 15px; }
+        @media (min-width: 600px) { .conditions h3 { margin-bottom: 15px; font-size: 18px; } }
+        .condition-item { color: rgba(255, 255, 255, 0.9); margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5; font-size: 12px; }
+        @media (min-width: 600px) { .condition-item { margin-bottom: 12px; padding-bottom: 12px; font-size: 14px; } }
+        .condition-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .condition-item strong { color: #0059FF; }
+        .code-section { background: rgba(255, 0, 0, 0.08); border: 2px solid rgba(255, 0, 0, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; text-align: center; }
+        @media (min-width: 600px) { .code-section { padding: 20px; margin-bottom: 20px; } }
+        .code-label { color: rgba(255, 255, 255, 0.8); font-size: 12px; margin-bottom: 8px; }
+        @media (min-width: 600px) { .code-label { font-size: 14px; margin-bottom: 10px; } }
+        .code-display { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 0, 0, 0.3); padding: 10px 14px; border-radius: 8px; color: #FF6B6B; font-family: 'Courier New', monospace; font-size: 16px; font-weight: bold; letter-spacing: 2px; margin-bottom: 10px; user-select: all; word-break: break-all; }
+        @media (min-width: 600px) { .code-display { padding: 12px 16px; font-size: 20px; letter-spacing: 3px; margin-bottom: 10px; } }
+        .btn-copy { background: rgba(255, 0, 0, 0.2); color: #FF6B6B; border: 1px solid #FF6B6B; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.3s ease; margin-bottom: 15px; display: inline-block; }
+        @media (min-width: 600px) { .btn-copy { padding: 8px 16px; font-size: 13px; margin-bottom: 20px; } }
+        .btn-copy:hover { background: #FF6B6B; color: white; }
+        .buttons-final { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        @media (min-width: 600px) { .buttons-final { gap: 12px; } }
+        .btn-share { flex: 1; min-width: 200px; padding: 12px 16px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); transition: all 0.3s ease; }
+        @media (min-width: 600px) { .btn-share { min-width: 300px; padding: 14px 20px; font-size: 16px; border-radius: 12px; } }
+        .btn-share:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4); }
+        .blocked-screen, .submitted-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; z-index: 9999; gap: 20px; padding: 20px; }
+        .blocked-screen.active, .submitted-screen.active { display: flex; }
+        .blocked-icon, .submitted-icon { font-size: 60px; }
+        @media (min-width: 600px) { .blocked-icon, .submitted-icon { font-size: 80px; } }
+        .submitted-icon { animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .blocked-text, .submitted-text { color: white; font-size: 18px; font-weight: bold; }
+        @media (min-width: 600px) { .blocked-text, .submitted-text { font-size: 24px; } }
+        .blocked-subtext, .submitted-subtext { color: rgba(255, 255, 255, 0.7); font-size: 14px; max-width: 400px; line-height: 1.6; }
+        @media (min-width: 600px) { .blocked-subtext, .submitted-subtext { font-size: 16px; } }
+        .hidden-capture { position: fixed; top: -9999px; left: -9999px; width: 500px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px; border-radius: 20px; z-index: -1; }
+        .capture-content { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); border: 2px solid rgba(255, 0, 0, 0.3); border-radius: 20px; padding: 35px; color: white; text-align: center; position: relative; overflow: hidden; }
+        .capture-content::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, rgba(255, 0, 0, 0.3), rgba(0, 89, 255, 0.3), transparent); }
+        .capture-logo { width: 100px; height: 100px; margin: 0 auto 20px; border: 2px solid rgba(255, 0, 0, 0.3); border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .capture-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .capture-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .capture-score { font-size: 40px; font-weight: bold; margin-bottom: 15px; }
+        .capture-footer { font-size: 12px; color: rgba(255, 255, 255, 0.8); margin-top: 15px; }
+        .capture-restaurant { font-size: 14px; color: rgba(255, 255, 255, 0.9); font-weight: 600; margin-top: 10px; }
         
-        /* خلفية زخرفية */
-        body::before {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
-            opacity: 0.05; pointer-events: none; z-index: -1;
-        }
+        /* منع النسخ */
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 0, 0, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 0, 0, 0.5); }
 
-        /* شريط اللوجو */
-        .logo-bar {
-            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
-            display: flex; justify-content: center; align-items: center;
-            border-bottom: 1px solid rgba(237, 28, 36, 0.3); z-index: 50;
-        }
-        .logo-bar img { height: 50px; }
-
-        /* الكارت الزجاجي */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            width: 90%; max-width: 600px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            margin-top: 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* تأثير النيون */
-        .glass-card::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, #ED1C24, #0059FF, transparent);
-        }
-
-        /* العناوين والنصوص */
-        h1, h2 { text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .subtitle { text-align: center; color: #ccc; font-size: 0.9rem; margin-bottom: 20px; }
-        
-        /* العداد */
-        .timer-box {
+        /* ستايل العداد الجديد */
+        .timer-container {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0, 0, 0, 0.3); padding: 10px 15px; border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2); padding: 10px 15px; border-radius: 10px;
+            margin-bottom: 15px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .timer-text { font-size: 1.2rem; font-weight: bold; color: #ED1C24; font-family: monospace; }
-        .timer-text.blink { animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+        .timer-label { color: #bbb; font-size: 14px; }
+        .timer-value { color: #FF0000; font-weight: bold; font-size: 18px; font-family: monospace; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        .timer-value.warning-time { animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* المدخلات */
-        input, textarea {
-            width: 100%; padding: 12px; margin: 10px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px; color: #fff;
-            font-family: inherit; transition: 0.3s;
-        }
-        input:focus, textarea:focus {
-            outline: none; border-color: #0059FF;
-            box-shadow: 0 0 10px rgba(0, 89, 255, 0.3);
-        }
-
-        /* الأزرار */
-        .btn {
-            width: 100%; padding: 12px; border: none; border-radius: 10px;
-            font-weight: bold; cursor: pointer; margin-top: 10px;
-            background: linear-gradient(45deg, #ED1C24, #c40008);
-            color: white; transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(237, 28, 36, 0.3);
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(237, 28, 36, 0.5); }
-        .btn-nav { display: flex; gap: 10px; }
-        .btn-prev { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
-
-        /* شريط التقدم */
-        .progress-container { width: 100%; background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
-        .progress-bar { height: 100%; background: #0059FF; width: 0%; transition: 0.3s; }
-
-        /* الأقسام */
-        .section { display: none; animation: fadeIn 0.5s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* منطقة النتائج المخفية (للتصوير) */
-        #capture-area {
-            position: fixed; top: -9999px; left: -9999px; width: 500px;
-            background: #16213e; padding: 40px; border-radius: 20px;
-            text-align: center; color: white;
-            border: 2px solid #ED1C24;
-        }
-
-        /* شاشات الحظر */
-        .fullscreen-msg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 9999;
-            display: none; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-        }
-        .fullscreen-msg i { font-size: 4rem; margin-bottom: 20px; }
     </style>
 </head>
-<body oncontextmenu="return false;">
-
+<body>
     <div class="logo-bar">
-        <img src="https://i.postimg.cc/x8wFPdB0/455633594-939216711554335-6005038485016903625-n.jpg" alt="Logo">
+        <img src="https://i.postimg.cc/x8wFPdB0/455633594-939216711554335-6005038485016903625-n.jpg" alt="تشيكن برويست" title="تشيكن برويست">
     </div>
 
-    <div class="glass-card">
-        
-        <div id="step-start" class="section active">
-            <h1>مسابقة رمضان الكبرى 🌙</h1>
-            <p class="subtitle">جاوب صح واكسب مع تشيكن برويست!</p>
+    <div class="blocked-screen" id="blockedScreen">
+        <div class="blocked-icon">⛔</div>
+        <div class="blocked-text" id="blockReasonText">تم حظرك من المشاركة</div>
+        <div class="blocked-subtext">محاولة الخروج من الموقع، فتح نافذة أخرى، أو انتهاء الوقت المحدد.</div>
+    </div>
+
+    <div class="submitted-screen" id="submittedScreen">
+        <div class="submitted-icon">✅</div>
+        <div class="submitted-text">تم تقديم إجاباتك بنجاح!</div>
+        <div class="submitted-subtext">شكراً لمشاركتك في مسابقة رمضان. يمكنك إغلاق الصفحة الآن أو انتظار النتائج.</div>
+    </div>
+
+    <div class="container">
+        <div class="glass-card">
             
-            <div style="background: rgba(255,0,0,0.15); padding: 10px; border-radius: 8px; border: 1px dashed #ED1C24; font-size: 0.8rem; margin-bottom: 20px;">
-                ⚠️ <strong>تنبيه هام:</strong> لديك 3 دقائق فقط. ممنوع الخروج من الصفحة أو محاولة الغش وإلا سيتم حظرك فوراً.
+            <div class="form-section active" id="nameSection">
+                <div class="header">
+                    <h1 class="title">مسابقة رمضان الكريم</h1>
+                    <p class="subtitle">🍗 تشيكن برويست 🍗</p>
+                </div>
+                <div class="warning">
+                    ⚠️ <strong>تحذير مهم:</strong> أمامك 3 دقائق فقط للإجابة. أي محاولة للخروج من الموقع أو فتح نافذة أخرى ستؤدي لحظرك فوراً.
+                </div>
+                <div class="name-input-wrapper">
+                    <label for="playerName">أدخل اسمك الكامل:</label>
+                    <input type="text" id="playerName" placeholder="مثال: محمد أحمد" required>
+                </div>
+                <button class="btn btn-next" onclick="startQuiz()">ابدأ المسابقة</button>
             </div>
 
-            <label>الاسم الثلاثي:</label>
-            <input type="text" id="username" placeholder="اكتب اسمك هنا...">
-            <button class="btn" onclick="startQuiz()">ابدأ التحدي 🚀</button>
+            <div class="form-section" id="quizSection">
+                <div class="timer-container">
+                    <div class="timer-label">الوقت المتبقي</div>
+                    <div class="timer-value" id="timerDisplay">03:00</div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+
+                <div class="question-section" data-question="1">
+                    <div class="question-title"><span class="question-number">1</span><span>من هو الصحابي الذي غسّلته الملائكة؟</span></div>
+                    <textarea class="text-input-area" id="q1_answer" placeholder="أجب عن السؤال بكل دقة..."></textarea>
+                </div>
+                <div class="question-section" data-question="2" style="display: none;">
+                    <div class="question-title"><span class="question-number">2</span><span>كم عدد المرات التي ذُكر فيها اسم جبريل عليه السلام صراحة في القرآن الكريم؟</span></div>
+                    <textarea class="text-input-area" id="q2_answer" placeholder="أجب عن السؤال بكل دقة..."></textarea>
+                </div>
+                <div class="question-section" data-question="3" style="display: none;">
+                    <div class="question-title"><span class="question-number">3</span><span>كم عدد السور التي بدأت بـ الحروف المقطعة؟</span></div>
+                    <textarea class="text-input-area" id="q3_answer" placeholder="أجب عن السؤال بكل دقة..."></textarea>
+                </div>
+                <div class="question-section" data-question="4" style="display: none;">
+                    <div class="question-title"><span class="question-number">4</span><span>من الصحابي الذي كان دليل الهجرة للنبي ﷺ وأبي بكر مع أنه لم يكن مسلماً وقتها؟</span></div>
+                    <textarea class="text-input-area" id="q4_answer" placeholder="أجب عن السؤال بكل دقة..."></textarea>
+                </div>
+                <div class="question-section" data-question="5" style="display: none;">
+                    <div class="question-title"><span class="question-number">5</span><span>في أي عام كانت غزوة بدر؟</span></div>
+                    <textarea class="text-input-area" id="q5_answer" placeholder="أجب عن السؤال بكل دقة..."></textarea>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-prev" onclick="previousQuestion()" id="prevBtn" style="display: none;">السابق</button>
+                    <button class="btn btn-next" onclick="nextQuestion()" id="nextBtn">التالي</button>
+                    <button class="btn btn-submit" onclick="submitQuiz()" id="submitBtn" style="display: none;">إرسال الإجابات</button>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 50px; margin-bottom: 15px;">🏆</div>
+                    <h2 class="title">تم إنهاء المسابقة!</h2>
+                    <p class="subtitle" id="playerNameDisplay"></p>
+                </div>
+                <div class="score-box">
+                    <div class="score-display" id="scoreDisplay">0/5</div>
+                    <div class="score-label">النقاط التي حصلت عليها</div>
+                </div>
+                <div class="conditions">
+                    <h3>📋 شروط المشاركة:</h3>
+                    <div class="condition-item">1️⃣ <strong>أخذ لقطة شاشة:</strong> صوّر النتيجة من خلال زر "📸 شارك النتيجة"</div>
+                    <div class="condition-item">2️⃣ <strong>منشن الأصدقاء:</strong> قم بمنشن أصحابك في التعليقات</div>
+                    <div class="condition-item">3️⃣ <strong>المتابعة:</strong> تابعنا على انستجرام وفيسبوك وتيك توك</div>
+                </div>
+                <div class="code-section">
+                    <div class="code-label">🔐 الكود السري (احتفظ به لإثبات المشاركة):</div>
+                    <div class="code-display" id="secretCode">XXXX-XXXX-XXXX</div>
+                    <button class="btn-copy" onclick="copyCode()">📋 نسخ الكود</button>
+                </div>
+                <div class="buttons-final">
+                    <button class="btn-share" onclick="shareScreenshot()" id="shareBtn">📸 شارك النتيجة</button>
+                </div>
+            </div>
         </div>
-
-        <div id="step-quiz" class="section">
-            <div class="timer-box">
-                <span>الوقت المتبقي:</span>
-                <span id="timer-display" class="timer-text">03:00</span>
-            </div>
-
-            <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-
-            <div id="question-container">
-                <h3 id="q-text">نص السؤال...</h3>
-                <textarea id="q-answer" rows="3" placeholder="اكتب إجابتك هنا..."></textarea>
-            </div>
-
-            <div class="btn-nav">
-                <button id="btn-prev" class="btn btn-prev" onclick="prevQ()" style="display:none">السابق</button>
-                <button id="btn-next" class="btn" onclick="nextQ()">التالي</button>
-                <button id="btn-submit" class="btn" onclick="submitQuiz()" style="display:none; background:#28a745;">إنهاء وإرسال ✅</button>
-            </div>
-        </div>
-
-        <div id="step-result" class="section" style="text-align: center;">
-            <h1>🎉 تم الإرسال بنجاح!</h1>
-            <p>نتيجتك هي:</p>
-            <h2 id="final-score" style="font-size: 3rem; color: #0059FF;">0/5</h2>
-            
-            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                <p style="margin-bottom: 5px; font-size: 0.9rem; color: #ccc;">الكود السري (احتفظ به):</p>
-                <h3 id="secret-code" style="color: #ED1C24; font-family: monospace; letter-spacing: 2px;">Generating...</h3>
-                <button onclick="copyCode()" style="background:none; border:none; color:#0059FF; cursor:pointer; font-size:0.8rem;">نسخ الكود 📋</button>
-            </div>
-
-            <p style="font-size: 0.9rem; margin-bottom: 20px;">
-                📸 <strong>مطلوب:</strong> اضغط الزر بالأسفل لتحميل صورة النتيجة، ثم شاركها في التعليقات مع منشن لأصحابك!
-            </p>
-
-            <button class="btn" onclick="downloadResult()">📸 تحميل صورة النتيجة</button>
-        </div>
-
     </div>
 
-    <div id="ban-screen" class="fullscreen-msg">
-        <i class="icon">⛔</i>
-        <h1 style="color: #ED1C24;">تم حظرك!</h1>
-        <p>لقد حاولت الخروج من الصفحة أو انتهى الوقت.</p>
-    </div>
-
-    <div id="capture-area">
-        <img src="https://i.postimg.cc/x8wFPdB0/455633594-939216711554335-6005038485016903625-n.jpg" style="width: 80px; border-radius: 50%; border: 3px solid #ED1C24; margin-bottom: 10px;">
-        <h2 style="margin: 0;">مسابقة رمضان</h2>
-        <p style="color: #ccc; margin-top: 5px;">تشيكن برويست</p>
-        <div style="margin: 20px 0; border-top: 1px solid #555; border-bottom: 1px solid #555; padding: 20px 0;">
-            <h3 id="cap-name">الاسم</h3>
-            <h1 id="cap-score" style="font-size: 4rem; color: #ED1C24; margin: 10px 0;">0/5</h1>
+    <div class="hidden-capture" id="captureArea">
+        <div class="capture-content">
+            <div class="capture-logo"><img src="https://i.postimg.cc/x8wFPdB0/455633594-939216711554335-6005038485016903625-n.jpg" alt="تشيكن برويست"></div>
+            <div class="capture-restaurant">تشيكن برويست</div>
+            <div class="capture-title">مسابقة رمضان الكريم</div>
+            <div class="capture-score" id="captureScore">0/5</div>
+            <div style="color: rgba(255, 255, 255, 0.9); font-size: 14px; margin-bottom: 15px;" id="captureName">اللاعب</div>
+            <div class="capture-footer">🔐 الكود: <span id="captureCode">XXXX-XXXX-XXXX</span></div>
         </div>
-        <p>الكود السري: <span id="cap-code" style="font-family: monospace; color: #0059FF;">CODE</span></p>
     </div>
 
     <script>
-        // --- 1. الإعدادات ---
+        // ===================== تهيئة EmailJS =====================
         (function(){
-            emailjs.init("aciXoyz9gZFbN4N0d"); // Public Key الخاص بك
+            // مفتاحك العام الذي أرسلته سابقاً
+            emailjs.init("aciXoyz9gZFbN4N0d");
         })();
 
-        const questions = [
-            { t: "ما اسم الصحابي الذي غسّلته الملائكة؟", a: ["حنظلة", "ابي عامر"] },
-            { t: "كم عدد المرات التي ذُكر فيها اسم جبريل صراحة في القرآن؟", a: ["3", "ثلاث", "تلات"] },
-            { t: "كم عدد السور التي بدأت بالحروف المقطعة؟", a: ["29", "تسع وعشرين"] },
-            { t: "من هو دليل النبي في الهجرة (غير المسلم)؟", a: ["عبد الله بن اريقط", "عبدالله بن اريقط", "اريقط"] },
-            { t: "في أي عام كانت غزوة بدر؟", a: ["2", "ثانية", "الثانية", "سنتين"] }
-        ];
-
-        let currentQ = 0;
-        let score = 0;
+        // ===================== متغيرات عامة =====================
+        let currentQuestion = 1;
+        let playerName = '';
+        let secretCode = '';
+        let sessionActive = true;
         let answers = {};
-        let userName = "";
-        let secretCode = "";
+        let blockedDevices = JSON.parse(sessionStorage.getItem('blockedDevices')) || [];
+        let deviceID = '';
+        let tabActive = true;
+        let quizStarted = false;
+        let shareCount = 0;
+        let quizSubmitted = false;
+
+        // متغيرات المؤقت
+        let timeLeft = 180; // 3 دقائق (بالثواني)
         let timerInterval;
-        let timeLeft = 180; // 3 دقائق
-        let isBanned = localStorage.getItem('cb_banned') === 'true';
 
-        // --- 2. التحقق من الحظر ---
-        if(isBanned) document.getElementById('ban-screen').style.display = 'flex';
+        const correctAnswers = {
+            q1: ['حنظلة', 'أبي عامر'],
+            q2: ['4', 'أربع', '3', 'ثلاث', 'تلاتة'],
+            q3: ['29', 'تسع وعشرين'],
+            q4: ['عبدالله', 'أريقط'],
+            q5: ['2', 'ثانية', 'الهجرة']
+        };
 
-        // --- 3. بدء المسابقة ---
-        function startQuiz() {
-            userName = document.getElementById('username').value.trim();
-            if(userName.length < 3) return Swal.fire('تنبيه', 'يرجى كتابة الاسم الثلاثي', 'warning');
-
-            document.getElementById('step-start').classList.remove('active');
-            document.getElementById('step-quiz').classList.add('active');
-            
-            showQuestion();
-            startTimer();
-            activateAntiCheat();
+        function generateDeviceID() {
+            const nav = navigator;
+            const screen = window.screen;
+            let id = nav.userAgent + screen.width + screen.height + nav.language;
+            return btoa(id).substring(0, 30);
         }
 
-        // --- 4. إدارة الأسئلة ---
-        function showQuestion() {
-            document.getElementById('q-text').innerText = `سؤال ${currentQ + 1}: ${questions[currentQ].t}`;
-            document.getElementById('q-answer').value = answers[`q${currentQ}`] || "";
-            
-            // تحديث الأزرار
-            document.getElementById('btn-prev').style.display = currentQ === 0 ? 'none' : 'inline-block';
-            document.getElementById('btn-next').style.display = currentQ === 4 ? 'none' : 'inline-block';
-            document.getElementById('btn-submit').style.display = currentQ === 4 ? 'inline-block' : 'none';
-            
-            // شريط التقدم
-            document.getElementById('progress-bar').style.width = `${((currentQ+1)/5)*100}%`;
-        }
-
-        function nextQ() {
-            saveAnswer();
-            if(currentQ < 4) { currentQ++; showQuestion(); }
-        }
-
-        function prevQ() {
-            saveAnswer();
-            if(currentQ > 0) { currentQ--; showQuestion(); }
-        }
-
-        function saveAnswer() {
-            answers[`q${currentQ}`] = document.getElementById('q-answer').value.trim();
-        }
-
-        // --- 5. العداد التنازلي ---
+        // ===================== دالة المؤقت =====================
         function startTimer() {
-            const display = document.getElementById('timer-display');
+            const display = document.getElementById('timerDisplay');
             timerInterval = setInterval(() => {
+                if (!quizStarted || quizSubmitted) { clearInterval(timerInterval); return; }
                 timeLeft--;
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
-                display.innerText = `0${m}:${s < 10 ? '0'+s : s}`;
-                
-                if(timeLeft < 30) display.classList.add('blink');
-                if(timeLeft <= 0) banUser();
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                display.innerText = `0${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft < 30) display.classList.add('warning-time');
+                if (timeLeft <= 0) { clearInterval(timerInterval); blockDevice('انتهى الوقت المحدد للمسابقة!'); }
             }, 1000);
         }
 
-        // --- 6. الإنهاء والإرسال ---
-        function submitQuiz() {
-            saveAnswer();
-            clearInterval(timerInterval);
+        // ===================== منع الغش =====================
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J'))) {
+                e.preventDefault(); blockDevice('محاولة فتح أدوات المطور');
+            }
+        });
+        window.addEventListener('beforeunload', (e) => {
+            if (quizStarted && !quizSubmitted) { e.preventDefault(); e.returnValue = ''; blockDevice('محاولة الخروج من الموقع'); }
+        });
+        window.addEventListener('blur', () => {
+            if (quizStarted && !quizSubmitted && tabActive) { tabActive = false; blockDevice('محاولة فتح نافذة أخرى'); }
+        });
+        window.addEventListener('focus', () => {
+            if (quizStarted && !quizSubmitted && !tabActive) { blockDevice('محاولة العودة بعد مغادرة الموقع'); }
+        });
 
-            // حساب النتيجة
-            questions.forEach((q, index) => {
-                let userAns = (answers[`q${index}`] || "").toLowerCase();
-                let isCorrect = q.a.some(key => userAns.includes(key));
-                if(isCorrect) score++;
-            });
-
-            // توليد الكود
-            secretCode = "CB-" + Math.floor(100000 + Math.random() * 900000);
-            
-            // عرض النتائج
-            document.getElementById('step-quiz').classList.remove('active');
-            document.getElementById('step-result').classList.add('active');
-            document.getElementById('final-score').innerText = `${score}/5`;
-            document.getElementById('secret-code').innerText = secretCode;
-
-            // إرسال الإيميل
-            sendEmail();
+        function generateSecretCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 12; i++) {
+                if (i === 4 || i === 8) code += '-';
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
         }
 
-        // --- 7. إرسال الإيميل (EmailJS) ---
-        function sendEmail() {
-            // 🛑🛑🛑 غير الكود اللي تحت ده بالـ Service ID بتاعك
-            const serviceID = "ضع_SERVICE_ID_هنا"; 
-            const templateID = "template_ayg67ja";
+        function blockDevice(reason) {
+            if (!blockedDevices.includes(deviceID)) {
+                blockedDevices.push(deviceID);
+                sessionStorage.setItem('blockedDevices', JSON.stringify(blockedDevices));
+            }
+            sessionActive = false;
+            quizStarted = false;
+            clearInterval(timerInterval);
+            document.getElementById('blockReasonText').innerText = reason || "تم حظرك من المشاركة";
+            document.getElementById('blockedScreen').classList.add('active');
+        }
 
-            const params = {
+        // ===================== بدء المسابقة =====================
+        function startQuiz() {
+            playerName = document.getElementById('playerName').value.trim();
+            if (!playerName) { alert('من فضلك أدخل اسمك قبل البدء'); return; }
+            deviceID = generateDeviceID();
+            if (blockedDevices.includes(deviceID)) { document.getElementById('blockedScreen').classList.add('active'); return; }
+            secretCode = generateSecretCode();
+            quizStarted = true;
+            document.getElementById('nameSection').classList.remove('active');
+            document.getElementById('quizSection').classList.add('active');
+            showQuestion(1);
+            startTimer();
+        }
+
+        function showQuestion(num) {
+            currentQuestion = num;
+            document.querySelectorAll('.question-section').forEach(q => q.style.display = 'none');
+            document.querySelector(`[data-question="${num}"]`).style.display = 'block';
+            const progress = (num / 5) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('prevBtn').style.display = num === 1 ? 'none' : 'block';
+            document.getElementById('nextBtn').style.display = num === 5 ? 'none' : 'block';
+            document.getElementById('submitBtn').style.display = num === 5 ? 'block' : 'none';
+            const answer = answers[`q${num}_answer`];
+            if (answer) document.getElementById(`q${num}_answer`).value = answer;
+            window.scrollTo(0, 100);
+        }
+
+        function nextQuestion() {
+            const currentAnswer = document.getElementById(`q${currentQuestion}_answer`).value.trim();
+            if (!currentAnswer) { alert('من فضلك أجب على السؤال قبل الذهاب للسؤال التالي'); return; }
+            answers[`q${currentQuestion}_answer`] = currentAnswer;
+            if (currentQuestion < 5) showQuestion(currentQuestion + 1);
+        }
+
+        function previousQuestion() {
+            const currentAnswer = document.getElementById(`q${currentQuestion}_answer`).value.trim();
+            if (currentAnswer) answers[`q${currentQuestion}_answer`] = currentAnswer;
+            if (currentQuestion > 1) showQuestion(currentQuestion - 1);
+        }
+
+        function checkAnswer(questionNum, userAnswer) {
+            const keywords = correctAnswers[`q${questionNum}`];
+            const answer = userAnswer.trim().toLowerCase();
+            for (let keyword of keywords) {
+                if (answer.includes(keyword.toLowerCase())) return true;
+            }
+            return false;
+        }
+
+        function submitQuiz() {
+            const lastAnswer = document.getElementById('q5_answer').value.trim();
+            if (!lastAnswer) { alert('من فضلك أجب على السؤال الأخير'); return; }
+            answers['q5_answer'] = lastAnswer;
+            clearInterval(timerInterval);
+            let score = 0;
+            for (let i = 1; i <= 5; i++) {
+                const userAnswer = answers[`q${i}_answer`] || '';
+                if (checkAnswer(i, userAnswer)) score++;
+            }
+            quizSubmitted = true;
+            showResults(score);
+            sendDataToEmail(score);
+            setTimeout(() => { document.getElementById('submittedScreen').classList.add('active'); }, 5000);
+        }
+
+        function showResults(score) {
+            document.getElementById('quizSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.add('active');
+            document.getElementById('playerNameDisplay').textContent = playerName;
+            document.getElementById('scoreDisplay').textContent = score + '/5';
+            document.getElementById('secretCode').textContent = secretCode;
+            document.getElementById('captureScore').textContent = score + '/5';
+            document.getElementById('captureName').textContent = playerName;
+            document.getElementById('captureCode').textContent = secretCode;
+            window.scrollTo(0, 100);
+        }
+
+        function copyCode() {
+            navigator.clipboard.writeText(secretCode).then(() => { alert('✅ تم نسخ الكود بنجاح!'); });
+        }
+
+        function shareScreenshot() {
+            if (shareCount > 0) { alert('⚠️ تم أخذ صورة واحدة فقط لكل جهاز.'); return; }
+            const captureArea = document.getElementById('captureArea');
+            html2canvas(captureArea, { backgroundColor: null, scale: 2, useCORS: true }).then((canvas) => {
+                const link = document.createElement('a');
+                link.download = `Chicken_Broast_${secretCode}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+                shareCount++;
+                alert('✅ تم حفظ الصورة بنجاح! لا تنسَ المشاركة والمنشن.');
+            });
+        }
+
+        // ===================== إرسال الإيميل (EmailJS) =====================
+        function sendDataToEmail(score) {
+            // استبدل "ضع_SERVICE_ID_هنا" بالـ Service ID الحقيقي الخاص بك
+            const serviceID = "ضع_SERVICE_ID_هنا"; 
+            const templateID = "template_ayg67ja"; // الـ Template ID الذي أرسلته
+
+            const templateParams = {
                 to_email: "karimkhaled435@gmail.com",
-                player_name: userName,
+                player_name: playerName,
                 score: score,
                 secret_code: secretCode,
-                answers: JSON.stringify(answers, null, 2),
-                device_id: navigator.userAgent
+                answers: JSON.stringify(answers, null, 2).replace(/[{}"],/g, '').replace(/{|}/g, ''), // تنسيق الإجابات
+                device_id: deviceID
             };
 
-            if(serviceID !== "ضع_SERVICE_ID_هنا") {
-                emailjs.send(serviceID, templateID, params)
-                    .then(() => console.log("Email Sent!"))
-                    .catch(err => console.error("Email Failed", err));
-            } else {
-                console.warn("⚠️ لم يتم إرسال الإيميل لأنك لم تضع Service ID");
+            if(serviceID === "ضع_SERVICE_ID_هنا") {
+                console.warn("تنبيه: لم يتم وضع Service ID، لن يتم إرسال الإيميل.");
+                return;
             }
+
+            emailjs.send(serviceID, templateID, templateParams)
+                .then(function(response) {
+                   console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                   console.log('FAILED...', error);
+                });
         }
 
-        // --- 8. نظام الحماية (Anti-Cheat) ---
-        function activateAntiCheat() {
-            document.addEventListener("visibilitychange", () => {
-                if(document.hidden) banUser();
-            });
-            window.onblur = () => banUser();
-            // منع F12
-            document.onkeydown = function(e) {
-                if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
+        window.addEventListener('load', () => {
+            deviceID = generateDeviceID();
+            const previousSubmission = sessionStorage.getItem('quizSubmitted_' + deviceID);
+            if (previousSubmission) {
+                const submissionData = JSON.parse(previousSubmission);
+                document.getElementById('nameSection').classList.remove('active');
+                document.getElementById('resultsSection').classList.add('active');
+                document.getElementById('playerNameDisplay').textContent = submissionData.playerName;
+                document.getElementById('scoreDisplay').textContent = submissionData.score + '/5';
+                document.getElementById('secretCode').textContent = submissionData.secretCode;
+                document.getElementById('shareBtn').textContent = '✅ تم التقديم سابقاً';
+                document.getElementById('shareBtn').disabled = true;
+                document.getElementById('shareBtn').style.opacity = '0.6';
+                quizSubmitted = true;
             }
-        }
+            if (blockedDevices.includes(deviceID)) {
+                document.getElementById('blockedScreen').classList.add('active');
+                document.querySelector('.container').style.display = 'none';
+            }
+        });
 
-        function banUser() {
-            clearInterval(timerInterval);
-            localStorage.setItem('cb_banned', 'true');
-            document.getElementById('ban-screen').style.display = 'flex';
-        }
-
-        // --- 9. أدوات مساعدة ---
-        function copyCode() {
-            navigator.clipboard.writeText(secretCode);
-            Swal.fire({ icon: 'success', title: 'تم النسخ', timer: 1500, showConfirmButton: false });
-        }
-
-        function downloadResult() {
-            // تحديث بيانات كارت التصوير المخفي
-            document.getElementById('cap-name').innerText = userName;
-            document.getElementById('cap-score').innerText = `${score}/5`;
-            document.getElementById('cap-code').innerText = secretCode;
-
-            const area = document.getElementById('capture-area');
-            html2canvas(area, { scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `ChickenBroast_${secretCode}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        }
+        const originalSubmitQuiz = submitQuiz;
+        submitQuiz = function() {
+            originalSubmitQuiz.call(this);
+            if (quizSubmitted) {
+                const submissionData = {
+                    playerName: playerName,
+                    score: parseInt(document.getElementById('scoreDisplay').textContent),
+                    secretCode: secretCode,
+                    timestamp: new Date().toISOString()
+                };
+                sessionStorage.setItem('quizSubmitted_' + deviceID, JSON.stringify(submissionData));
+            }
+        };
     </script>
 </body>
 </html>
