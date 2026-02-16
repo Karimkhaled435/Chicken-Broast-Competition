@@ -9,67 +9,84 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* ==================== نفس الستايل الخاص بك تماماً ==================== */
+        /* ==================== الستايل والتصميم ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
         body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 10px; }
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 89, 255, 0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        
         .logo-bar { position: fixed; top: 0; right: 0; left: 0; height: 80px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); border-bottom: 2px solid rgba(255, 0, 0, 0.3); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 10px; }
         .logo-bar img { height: 60px; width: auto; object-fit: contain; }
+        
         .container { position: relative; z-index: 1; width: 100%; max-width: 750px; animation: slideIn 0.8s ease-out; margin-top: 100px; margin-bottom: 20px; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
         .glass-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); border: 2px solid rgba(255, 0, 0, 0.3); border-radius: 20px; padding: 30px 20px; box-shadow: 0 25px 65px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; }
         @media (min-width: 600px) { .glass-card { padding: 50px 40px; border-radius: 25px; } }
         .glass-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, rgba(255, 0, 0, 0.3), rgba(0, 89, 255, 0.3), transparent); pointer-events: none; }
+        
         .header { text-align: center; margin-bottom: 30px; animation: fadeInDown 0.8s ease-out 0.2s both; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         .title { color: #ffffff; font-size: 24px; font-weight: bold; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(255, 0, 0, 0.2); letter-spacing: 1px; }
         @media (min-width: 600px) { .title { font-size: 32px; } }
         .subtitle { color: rgba(255, 255, 255, 0.8); font-size: 14px; margin-bottom: 20px; letter-spacing: 0.5px; }
         @media (min-width: 600px) { .subtitle { font-size: 16px; } }
+        
         .warning { background: rgba(255, 0, 0, 0.15); border-left: 4px solid #FF0000; border-radius: 8px; padding: 14px; font-size: 12px; color: rgba(255, 255, 255, 0.95); line-height: 1.6; margin-bottom: 25px; }
         @media (min-width: 600px) { .warning { padding: 16px; font-size: 13px; margin-bottom: 30px; } }
+        
         .form-section { display: none; animation: fadeIn 0.5s ease-out; }
         .form-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .name-input-wrapper { margin-bottom: 25px; }
         .name-input-wrapper label { display: block; color: rgba(255, 255, 255, 0.95); font-size: 14px; margin-bottom: 10px; font-weight: 600; }
         @media (min-width: 600px) { .name-input-wrapper label { font-size: 16px; margin-bottom: 12px; } }
         .name-input-wrapper input { width: 100%; padding: 12px 14px; border: 2px solid rgba(0, 89, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: white; font-size: 14px; transition: all 0.3s ease; }
         @media (min-width: 600px) { .name-input-wrapper input { padding: 14px 16px; font-size: 16px; border-radius: 12px; } }
         .name-input-wrapper input:focus { outline: none; border-color: rgba(0, 89, 255, 0.6); background: rgba(0, 89, 255, 0.08); box-shadow: 0 0 20px rgba(0, 89, 255, 0.2); }
+        
         .question-section { margin-bottom: 25px; animation: fadeInUp 0.5s ease-out; }
         @media (min-width: 600px) { .question-section { margin-bottom: 30px; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
         .question-title { color: rgba(255, 255, 255, 0.95); font-size: 15px; font-weight: 600; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
         @media (min-width: 600px) { .question-title { font-size: 18px; gap: 12px; margin-bottom: 20px; line-height: 1.5; } }
         .question-number { background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); color: white; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3); }
         @media (min-width: 600px) { .question-number { width: 32px; height: 32px; min-width: 32px; font-size: 14px; } }
+        
         .text-input-area { width: 100%; padding: 12px 14px; border: 2px solid rgba(0, 89, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: white; font-size: 14px; font-family: inherit; resize: vertical; min-height: 80px; transition: all 0.3s ease; line-height: 1.5; }
         @media (min-width: 600px) { .text-input-area { padding: 14px 16px; font-size: 15px; border-radius: 12px; min-height: 100px; } }
         .text-input-area:focus { outline: none; border-color: rgba(0, 89, 255, 0.6); background: rgba(0, 89, 255, 0.08); box-shadow: 0 0 20px rgba(0, 89, 255, 0.2); }
+        
         .buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 30px; flex-wrap: wrap; }
         @media (min-width: 600px) { .buttons { gap: 12px; margin-top: 40px; } }
+        
         .btn { flex: 1; min-width: 100px; padding: 12px 16px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; position: relative; overflow: hidden; }
         @media (min-width: 600px) { .btn { padding: 14px 20px; font-size: 16px; border-radius: 12px; letter-spacing: 1px; } }
         .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
         .btn:hover::before { left: 100%; }
+        
         .btn-prev { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.9); border: 2px solid rgba(255, 255, 255, 0.2); }
         .btn-prev:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.4); }
+        
         .btn-next, .btn-submit, .btn-share { background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); color: white; border: none; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); }
         .btn-next:hover, .btn-submit:hover, .btn-share:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4); }
-        .btn-next:active, .btn-submit:active, .btn-share:active { transform: translateY(0); }
+        
         .progress-bar { background: rgba(255, 255, 255, 0.08); height: 5px; border-radius: 10px; overflow: hidden; margin-bottom: 25px; border: 1px solid rgba(0, 89, 255, 0.2); }
         @media (min-width: 600px) { .progress-bar { height: 6px; margin-bottom: 30px; } }
         .progress-fill { background: linear-gradient(90deg, #FF0000 0%, #0059FF 100%); height: 100%; transition: width 0.3s ease; box-shadow: 0 0 20px rgba(0, 89, 255, 0.5); }
+        
         .results-section { display: none; text-align: center; animation: fadeIn 0.5s ease-out; }
         .results-section.active { display: block; }
+        
         .score-box { background: rgba(0, 89, 255, 0.1); border: 2px solid rgba(0, 89, 255, 0.3); border-radius: 15px; padding: 30px 20px; margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0, 89, 255, 0.15); }
         @media (min-width: 600px) { .score-box { padding: 40px 30px; margin-bottom: 30px; border-radius: 16px; } }
         .score-display { font-size: 48px; font-weight: bold; background: linear-gradient(135deg, #FF0000 0%, #0059FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
         @media (min-width: 600px) { .score-display { font-size: 72px; margin-bottom: 10px; } }
         .score-label { color: rgba(255, 255, 255, 0.9); font-size: 15px; margin-bottom: 15px; }
         @media (min-width: 600px) { .score-label { font-size: 18px; margin-bottom: 20px; } }
+        
         .conditions { background: rgba(255, 255, 255, 0.05); border: 2px dashed rgba(255, 0, 0, 0.2); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: right; }
         @media (min-width: 600px) { .conditions { padding: 25px; margin-bottom: 30px; border-radius: 12px; } }
         .conditions h3 { color: #0059FF; margin-bottom: 12px; font-size: 15px; }
@@ -78,6 +95,7 @@
         @media (min-width: 600px) { .condition-item { margin-bottom: 12px; padding-bottom: 12px; font-size: 14px; } }
         .condition-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .condition-item strong { color: #0059FF; }
+        
         .code-section { background: rgba(255, 0, 0, 0.08); border: 2px solid rgba(255, 0, 0, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; text-align: center; }
         @media (min-width: 600px) { .code-section { padding: 20px; margin-bottom: 20px; } }
         .code-label { color: rgba(255, 255, 255, 0.8); font-size: 12px; margin-bottom: 8px; }
@@ -87,11 +105,13 @@
         .btn-copy { background: rgba(255, 0, 0, 0.2); color: #FF6B6B; border: 1px solid #FF6B6B; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.3s ease; margin-bottom: 15px; display: inline-block; }
         @media (min-width: 600px) { .btn-copy { padding: 8px 16px; font-size: 13px; margin-bottom: 20px; } }
         .btn-copy:hover { background: #FF6B6B; color: white; }
+        
         .buttons-final { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         @media (min-width: 600px) { .buttons-final { gap: 12px; } }
         .btn-share { flex: 1; min-width: 200px; padding: 12px 16px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); transition: all 0.3s ease; }
         @media (min-width: 600px) { .btn-share { min-width: 300px; padding: 14px 20px; font-size: 16px; border-radius: 12px; } }
         .btn-share:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255, 0, 0, 0.4); }
+        
         .blocked-screen, .submitted-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; z-index: 9999; gap: 20px; padding: 20px; }
         .blocked-screen.active, .submitted-screen.active { display: flex; }
         .blocked-icon, .submitted-icon { font-size: 60px; }
@@ -102,6 +122,7 @@
         @media (min-width: 600px) { .blocked-text, .submitted-text { font-size: 24px; } }
         .blocked-subtext, .submitted-subtext { color: rgba(255, 255, 255, 0.7); font-size: 14px; max-width: 400px; line-height: 1.6; }
         @media (min-width: 600px) { .blocked-subtext, .submitted-subtext { font-size: 16px; } }
+        
         .hidden-capture { position: fixed; top: -9999px; left: -9999px; width: 500px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px; border-radius: 20px; z-index: -1; }
         .capture-content { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); border: 2px solid rgba(255, 0, 0, 0.3); border-radius: 20px; padding: 35px; color: white; text-align: center; position: relative; overflow: hidden; }
         .capture-content::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, rgba(255, 0, 0, 0.3), rgba(0, 89, 255, 0.3), transparent); }
@@ -112,15 +133,7 @@
         .capture-footer { font-size: 12px; color: rgba(255, 255, 255, 0.8); margin-top: 15px; }
         .capture-restaurant { font-size: 14px; color: rgba(255, 255, 255, 0.9); font-weight: 600; margin-top: 10px; }
         
-        /* منع النسخ */
-        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-        input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 0, 0, 0.3); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 0, 0, 0.5); }
-
-        /* ستايل العداد الجديد */
+        /* ستايل العداد */
         .timer-container {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(0, 0, 0, 0.2); padding: 10px 15px; border-radius: 10px;
@@ -131,6 +144,9 @@
         .timer-value.warning-time { animation: pulse 1s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
+        /* منع النسخ */
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
     </style>
 </head>
 <body>
@@ -248,7 +264,7 @@
     <script>
         // ===================== تهيئة EmailJS =====================
         (function(){
-            // مفتاحك العام الذي أرسلته سابقاً
+            // تم وضع مفتاحك العام هنا مباشرة
             emailjs.init("aciXoyz9gZFbN4N0d");
         })();
 
@@ -266,7 +282,7 @@
         let quizSubmitted = false;
 
         // متغيرات المؤقت
-        let timeLeft = 180; // 3 دقائق (بالثواني)
+        let timeLeft = 180; // 3 دقائق
         let timerInterval;
 
         const correctAnswers = {
@@ -367,7 +383,7 @@
 
         function nextQuestion() {
             const currentAnswer = document.getElementById(`q${currentQuestion}_answer`).value.trim();
-            if (!currentAnswer) { alert('من فضلك أجب على السؤال قبل الذهاب للسؤال التالي'); return; }
+            // تم إزالة شرط التحقق من الإجابة الفارغة هنا
             answers[`q${currentQuestion}_answer`] = currentAnswer;
             if (currentQuestion < 5) showQuestion(currentQuestion + 1);
         }
@@ -389,7 +405,7 @@
 
         function submitQuiz() {
             const lastAnswer = document.getElementById('q5_answer').value.trim();
-            if (!lastAnswer) { alert('من فضلك أجب على السؤال الأخير'); return; }
+            // تم إزالة شرط التحقق من الإجابة الفارغة هنا أيضاً
             answers['q5_answer'] = lastAnswer;
             clearInterval(timerInterval);
             let score = 0;
@@ -434,23 +450,17 @@
 
         // ===================== إرسال الإيميل (EmailJS) =====================
         function sendDataToEmail(score) {
-            // استبدل "ضع_SERVICE_ID_هنا" بالـ Service ID الحقيقي الخاص بك
-            const serviceID = "service_7zbs7hm"; 
-            const templateID = "template_ayg67ja"; // الـ Template ID الذي أرسلته
+            const serviceID = "service_ipd73z4";  // Service ID الجديد
+            const templateID = "template_ayg67ja"; // Template ID الجديد
 
             const templateParams = {
                 to_email: "karimkhaled435@gmail.com",
                 player_name: playerName,
                 score: score,
                 secret_code: secretCode,
-                answers: JSON.stringify(answers, null, 2).replace(/[{}"],/g, '').replace(/{|}/g, ''), // تنسيق الإجابات
+                answers: JSON.stringify(answers, null, 2).replace(/[{}"],/g, '').replace(/{|}/g, ''),
                 device_id: deviceID
             };
-
-            if(serviceID === "service_7zbs7hm") {
-                console.warn("تنبيه: لم يتم وضع Service ID، لن يتم إرسال الإيميل.");
-                return;
-            }
 
             emailjs.send(serviceID, templateID, templateParams)
                 .then(function(response) {
