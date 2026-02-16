@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* ==================== الستايل والتصميم ==================== */
+        /* ==================== الستايل والتصميم (V5) ==================== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
         body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 10px; }
@@ -104,7 +104,6 @@
         .capture-footer { font-size: 12px; color: rgba(255, 255, 255, 0.8); margin-top: 15px; }
         .capture-restaurant { font-size: 14px; color: rgba(255, 255, 255, 0.9); font-weight: 600; margin-top: 10px; }
         
-        /* ستايل العداد */
         .timer-container {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(0, 0, 0, 0.2); padding: 10px 15px; border-radius: 10px;
@@ -241,7 +240,6 @@
         let playerName = '';
         let secretCode = '';
         let answers = {};
-        // هنا التعديل: استخدام localStorage بدلاً من sessionStorage ليبقى الحظر حتى بعد إغلاق المتصفح
         let blockedDevices = JSON.parse(localStorage.getItem('blockedDevices')) || [];
         let submittedUsers = JSON.parse(localStorage.getItem('submittedUsers')) || [];
         let deviceID = '';
@@ -250,25 +248,32 @@
         let shareCount = 0;
         let quizSubmitted = false;
         let userIP = "Unknown";
-
         let timeLeft = 180; 
         let timerInterval;
 
-        // دالة تطبيع النص (لتجاهل الهمزات والأخطاء الشائعة)
+        // دالة تعقيم النص وتوحيد الأرقام
         function normalizeArabic(text) {
             if (!text) return "";
+            
+            // تحويل الأرقام العربية إلى إنجليزية
+            const arabicNumbers = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+            for (let i = 0; i < 10; i++) {
+                text = text.replace(new RegExp(arabicNumbers[i], "g"), i);
+            }
+
             return text
                 .trim()
                 .toLowerCase()
-                .replace(/[إأآا]/g, "ا") // توحيد الألف
-                .replace(/ة/g, "ه")      // التاء المربوطة
-                .replace(/ى/g, "ي")      // الألف اللينة
-                .replace(/[^\w\s\u0600-\u06FF]/g, ""); // إزالة التشكيل
+                .replace(/[إأآا]/g, "ا")
+                .replace(/ة/g, "ه")
+                .replace(/ى/g, "ي")
+                .replace(/[^\w\s\u0600-\u06FF]/g, "");
         }
 
+        // الإجابات الصحيحة (تم تضمين الأرقام الإنجليزية فقط لأن الدالة ستحول العربية إليها)
         const correctAnswers = {
             q1: ['حنظله', 'ابي عامر', 'الراهب'],
-            q2: ['4', 'اربع', 'اربعه', '3', 'ثلاث', 'ثلاثه', 'تلات', 'تلاته'],
+            q2: ['3', 'ثلاث', 'ثلاثه', 'تلات', 'تلاته'], 
             q3: ['29', 'تسع وعشرين'],
             q4: ['عبدالله', 'اريقط'],
             q5: ['2', 'ثانيه', 'الثانيه', 'اثنان', 'سنتين', 'الثاني']
@@ -281,7 +286,6 @@
             return btoa(id).substring(0, 30);
         }
 
-        // جلب الـ IP لمعرفة الأجهزة على نفس الشبكة
         async function fetchIP() {
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
@@ -343,7 +347,6 @@
         function blockDevice(reason) {
             if (!blockedDevices.includes(deviceID)) {
                 blockedDevices.push(deviceID);
-                // الحفظ في LocalStorage ليبقى الحظر دائماً
                 localStorage.setItem('blockedDevices', JSON.stringify(blockedDevices));
             }
             quizStarted = false;
@@ -357,12 +360,11 @@
             if (!playerName) { alert('من فضلك أدخل اسمك قبل البدء'); return; }
             deviceID = generateDeviceID();
             
-            // التحقق القوي من localStorage
             if (blockedDevices.includes(deviceID) || localStorage.getItem('quizSubmitted_' + deviceID)) { 
                 document.getElementById('blockedScreen').classList.add('active'); return; 
             }
 
-            fetchIP(); // جلب الـ IP عند البدء
+            fetchIP();
             secretCode = generateSecretCode();
             quizStarted = true;
             document.getElementById('nameSection').classList.remove('active');
@@ -400,10 +402,10 @@
         function checkAnswer(questionNum, userAnswer) {
             if (!userAnswer) return false;
             const keywords = correctAnswers[`q${questionNum}`];
-            const answer = normalizeArabic(userAnswer); // تطبيع إجابة المستخدم
+            const answer = normalizeArabic(userAnswer);
             
             for (let keyword of keywords) {
-                if (answer.includes(normalizeArabic(keyword))) return true; // مقارنة مرنة
+                if (answer.includes(normalizeArabic(keyword))) return true;
             }
             return false;
         }
@@ -462,7 +464,7 @@
                 score: score,
                 secret_code: secretCode,
                 answers: JSON.stringify(answers, null, 2).replace(/[{}"],/g, '').replace(/{|}/g, ''),
-                device_id: deviceID + " | IP: " + userIP // إضافة الـ IP هنا
+                device_id: deviceID + " | IP: " + userIP
             };
 
             emailjs.send(serviceID, templateID, templateParams)
@@ -475,8 +477,6 @@
 
         window.addEventListener('load', () => {
             deviceID = generateDeviceID();
-            
-            // استخدام localStorage بدلاً من sessionStorage
             const previousSubmission = localStorage.getItem('quizSubmitted_' + deviceID);
             
             if (previousSubmission) {
@@ -507,7 +507,6 @@
                     secretCode: secretCode,
                     timestamp: new Date().toISOString()
                 };
-                // حفظ التقديم في localStorage ليمنع المحاولات المستقبلية حتى بعد إغلاق المتصفح
                 localStorage.setItem('quizSubmitted_' + deviceID, JSON.stringify(submissionData));
             }
         };
